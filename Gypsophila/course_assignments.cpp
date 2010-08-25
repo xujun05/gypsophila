@@ -102,6 +102,11 @@ bool destroy_all_assignment_element(p_assignment_element head)
 // write_all_file_to_xmlfile
 void write_all_assignment_to_xmlfile(char *filename, p_assignment_element head)
 {
+#ifdef WIN32
+	char gbk_filename[BUFFER_MAX_SIZE];
+	u2g(filename,strlen(filename), gbk_filename, BUFFER_MAX_SIZE);
+	msdosify(gbk_filename);
+#endif
   xmlDocPtr doc = NULL;
   xmlNodePtr root_node = NULL, assignment = NULL;
   doc = xmlNewDoc(BAD_CAST "1.0");
@@ -154,7 +159,12 @@ void write_all_assignment_to_xmlfile(char *filename, p_assignment_element head)
     //file_url = xmlNewChild(file, NULL ,BAD_CAST "remoteUrl" , BAD_CAST p->file_url);
     p = p->next;
   }
-  xmlSaveFormatFileEnc(filename, doc, "GBK", 1);
+#ifdef WIN32
+  xmlSaveFormatFileEnc(gbk_filename, doc, "UTF-8", 1);
+#endif
+#ifndef WIN32
+  xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+#endif
   
   /*free the document */
   xmlFreeDoc(doc);

@@ -6,6 +6,27 @@
 #include <cerrno>  
 #endif
 
+#ifdef WIN32
+/* The following functions are taken with modification from the DJGPP
+ * port of tar 1.12. They use algorithms originally from DJTAR. */
+
+char *msdosify (char *file_name)
+{
+	static const char illegal_chars_win32[] = "/:*?\"<>|"; /* illegal in WIN32 */
+	static const int illegal_chars_length = strlen(illegal_chars_win32);
+	int idx;
+	char *p = file_name;
+	for(idx = 0; idx < strlen(file_name) ; idx ++)
+	{
+		// 该字符是非法字符
+		if(memchr(illegal_chars_win32, p[idx], illegal_chars_length))
+		{
+			file_name[idx] = ' ';
+		}
+	}
+  return p;
+}
+#endif
 
 char *rindex(char *src, char ch)
 {
@@ -180,10 +201,17 @@ bool  copy_web_page_to_memory(char *url,void *parse_function, void *userdata)
  */
 bool make_dir(char * path)
 {
-  // LINUX MAC CODE
-  if(access(path,0) == -1)
+#ifdef WIN32
+	char msdos_path[BUFFER_MAX_SIZE];
+	strcpy(msdos_path, path);
+	msdosify(msdos_path);
+	char *p2path = msdos_path;
+#else
+	char *p2path = path;
+#endif
+  if(access(p2path,0) == -1)
   {
-    if(mkdir(path))
+    if(mkdir(p2path))
     {
       return FALSE;
     }
@@ -241,6 +269,7 @@ bool download_file(char *url,char *save_name)
 #ifdef WIN32
   char gbk_save_name[BUFFER_MAX_SIZE];
   u2g(save_name, strlen(save_name), gbk_save_name, BUFFER_MAX_SIZE);
+  msdosify(gbk_save_name);
   outs.filename = strdup(gbk_save_name);
 #endif
 #ifndef WIN32

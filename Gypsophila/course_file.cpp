@@ -70,6 +70,11 @@ bool destroy_all_file_element(p_file_element head)
 
 void write_all_file_to_xmlfile(char *filename, p_file_element head)
 {
+#ifdef WIN32
+	char gbk_filename[BUFFER_MAX_SIZE];
+	u2g(filename,strlen(filename), gbk_filename, BUFFER_MAX_SIZE);
+	msdosify(gbk_filename);
+#endif
   xmlDocPtr doc = NULL;
   xmlNodePtr root_node = NULL, file = NULL;
   doc = xmlNewDoc(BAD_CAST "1.0");
@@ -98,7 +103,12 @@ void write_all_file_to_xmlfile(char *filename, p_file_element head)
     file_local_location = xmlNewChild(file, NULL ,BAD_CAST "localLocation" , BAD_CAST p->file_local_location);
     p = p->next;
   }
-  xmlSaveFormatFileEnc(filename, doc, "GBK", 1);
+#ifdef WIN32
+  xmlSaveFormatFileEnc(gbk_filename, doc, "UTF-8", 1);
+#endif
+#ifndef WIN32
+  xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+#endif
   
   /*free the document */
   xmlFreeDoc(doc);

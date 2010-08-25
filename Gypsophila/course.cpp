@@ -248,7 +248,7 @@ bool parse_course_file(char *path,p_file_element head)
   // discard p_cache_start[0], it has no use.
   for(i = 1; i<= no_of_file_type;i++)
   {
-    p_cache_start[i] = strstr(p_cache_start[i-1], "<table  id=\"table_box\"");
+    p_cache_start[i] = strstr(p_cache_start[i-1] + 1, "<table  id=\"table_box\"");
     memset(p_cache_start[i] - 1, 0, 1);
   }
 

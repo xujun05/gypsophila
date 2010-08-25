@@ -176,6 +176,7 @@ void write_all_discussion_to_xmlfile(char *filename, p_discussion_element head)
 #ifdef WIN32
 	char gbk_filename[BUFFER_MAX_SIZE];
 	u2g(filename,strlen(filename), gbk_filename, BUFFER_MAX_SIZE);
+	msdosify(gbk_filename);
 #endif
   xmlDocPtr doc = NULL;
   xmlNodePtr root_node = NULL, discussion = NULL;
@@ -228,6 +229,7 @@ void write_all_reply_to_xmlfile_by_discussion_id(char *filename, p_discussion_el
 #ifdef WIN32
 	char gbk_filename[BUFFER_MAX_SIZE];
 	u2g(filename,strlen(filename), gbk_filename, BUFFER_MAX_SIZE);
+	msdosify(gbk_filename);
 #endif
   xmlDocPtr doc = NULL;
   xmlNodePtr root_node = NULL, discussion = NULL, reply = NULL;

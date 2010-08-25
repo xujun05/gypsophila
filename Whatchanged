@@ -1,3 +1,11 @@
+2010-08-25 23:13 Fixed bugs
+1. msdos/win32 filepath: msdosify() function solve this problem
+2. course.c:251 the pointer plus 1 can solve this problem
+3. every write_to_xml function() modified
+
+todo
+1. test
+
 2010-08-25 Changes and Todoes
 1. remove part: cache encoding convert. Using UTF-8 coding in memory, and Linux/MacOSX compatiable
 2. remove_and_convert_html: changing some code to satify libxml

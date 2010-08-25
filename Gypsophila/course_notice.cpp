@@ -60,6 +60,11 @@ bool destroy_all_notice_element(p_notice_element head)
 // write it to file
 void write_all_notice_to_xmlfile(char *filename, p_notice_element head)
 {
+#ifdef WIN32
+	char gbk_filename[BUFFER_MAX_SIZE];
+	u2g(filename,strlen(filename), gbk_filename, BUFFER_MAX_SIZE);
+	msdosify(gbk_filename);
+#endif
   xmlDocPtr doc = NULL;
   xmlNodePtr root_node = NULL, notice = NULL;
   doc = xmlNewDoc(BAD_CAST "1.0");
@@ -81,7 +86,12 @@ void write_all_notice_to_xmlfile(char *filename, p_notice_element head)
     notice_content = xmlNewChild(notice, NULL ,BAD_CAST "content" , BAD_CAST p->notice_body);
     p = p->next;
   }
-  xmlSaveFormatFileEnc(filename, doc, "GBK", 1);
+#ifdef WIN32
+  xmlSaveFormatFileEnc(gbk_filename, doc, "UTF-8", 1);
+#endif
+#ifndef WIN32
+  xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+#endif
   
   /*free the document */
   xmlFreeDoc(doc);

@@ -112,15 +112,16 @@ void mirror_course(char *prefix)
     sprintf(buf,"%s%c%s%c%s",prefix,PATH_SPILIT_CHAR,p->course_term,PATH_SPILIT_CHAR,p->course_name);
     make_dir_recusive(buf);
     
-    //mirror_course_notice(buf, p->course_id);
+    mirror_course_notice(buf, p->course_id);
 
+	//if(p->course_id == 62457)
 	mirror_course_file(buf, p->course_id);
 
 
-	//mirror_course_assignment(buf, p->course_id);
+	mirror_course_assignment(buf, p->course_id);
 
 
-	//mirror_course_discussion(buf, p->course_id);
+	mirror_course_discussion(buf, p->course_id);
     p = p->next;
   }
 }

@@ -55,6 +55,12 @@ typedef struct _course
   struct _course* next;
 }course,*p_course;
 
+#ifdef WIN32
+/* The following functions are taken with modification from the DJGPP
+ * port of tar 1.12. They use algorithms originally from DJTAR. */
+
+char *msdosify ( char *file_name);
+#endif
 char *rindex(char *src, char ch);
 
 // String Operation
