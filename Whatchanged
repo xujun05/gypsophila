@@ -1,0 +1,10 @@
+2010-08-25 Changes and Todoes
+1. remove part: cache encoding convert. Using UTF-8 coding in memory, and Linux/MacOSX compatiable
+2. remove_and_convert_html: changing some code to satify libxml
+3. change gypsophila.cpp's encoding!!! or strange error
+4. download_file is OK, from curl's download code, but function fwrite() why not working?
+5. Fixed a bug: course.c 891(Mac is also need to be fixed!)
+
+6. TODO: msdos/Windows file path
+7. TODO: in course file part, more tags will lead to download the same file.??
+

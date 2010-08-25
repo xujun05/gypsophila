@@ -2,6 +2,9 @@
 #include <windows.h>
 #include   <direct.h> 
 #include  <io.h>
+#ifdef WIN32
+#include <cerrno>  
+#endif
 
 
 char *rindex(char *src, char ch)
@@ -29,13 +32,13 @@ size_t print_data(void *buf, size_t size, size_t nmemb, void * user_p)
   return strlen((const char *)buf);
 }
 
-size_t copy_to_buffer(void *buf, size_t size, size_t nmemb, void * user_p)
+/*size_t copy_to_buffer(void *buf, size_t size, size_t nmemb, void * user_p)
 {
   extern cache_memory cache;
 
 #ifdef WIN32
   char *gbkbuffer  = (char *)malloc ( (size * nmemb + 1) * 4);
-
+	//memset (gbkbuffer, 0,  (size * nmemb + 1) * 4);
   int reture_code = u2g((char *)buf, size *nmemb, gbkbuffer, ( (size * nmemb +1) * 2));
 
   if(reture_code < 0)
@@ -48,7 +51,7 @@ size_t copy_to_buffer(void *buf, size_t size, size_t nmemb, void * user_p)
 	  else if (errno == EINVAL)
 	  {
 		printf("")
-	  }*/
+	  }
 	  printf("Error, UTF-8 to GBK EROOR");
 	  //exit(1);
   }
@@ -105,8 +108,32 @@ size_t copy_to_buffer(void *buf, size_t size, size_t nmemb, void * user_p)
   }
   else
     return 0;
-}
+}*/
 
+size_t copy_to_buffer(void *buf, size_t size, size_t nmemb, void * user_p)
+{
+  extern cache_memory cache;
+	while(cache.size < cache.offset + size * nmemb + 1)
+  {
+    cache.mem = (char *)my_realloc(cache.mem, cache.size + CACHE_DEC_SIZE);
+    if(cache.mem)
+      cache.size = cache.size + CACHE_DEC_SIZE;
+    else
+    {  
+      cache.size = 0;
+      cache.offset = 0;
+      break;
+    }
+  }
+  if(cache.mem){
+    memcpy (&(cache.mem[cache.offset]), buf, size * nmemb);
+	cache.offset += size * nmemb; 
+    cache.mem[cache.offset] ='\0';
+	return size * nmemb;
+  }
+  else
+    return 0;
+}
 
 void * my_realloc(void * origin_ptr, size_t size)
 {
@@ -120,9 +147,17 @@ void * my_realloc(void * origin_ptr, size_t size)
 
 size_t write_to_file(void *buf, size_t size, size_t nmemb, void *user_p)
 {
-  FILE *fp = (FILE*)user_p;
-  fwrite(buf,size,nmemb,fp);
-  return nmemb;
+  OutStruct *out = (OutStruct *)user_p;
+  if(!out->stream)
+  {
+	out->stream = fopen(out->filename, "wb");
+	if(!out->stream)
+	{
+		printf("Failed to Create the file %s\n", out->filename, strerror((errno)));
+		return 0;
+	}
+  }
+  return fwrite(buf, size, nmemb, out->stream);
 }
 
 /*
@@ -158,22 +193,28 @@ bool make_dir(char * path)
 
 bool make_dir_recusive(char *path)
 {
+	char *p2path = path;
+#ifdef WIN32
+	char gbk_path[BUFFER_MAX_SIZE];
+	u2g(path, strlen(path), gbk_path, BUFFER_MAX_SIZE);
+	p2path = gbk_path;
+#endif
   char path_buf[BUFFER_MAX_SIZE];
-  char *p_start = path;
+  char *p_start = p2path;
   if( *p_start == PATH_SPILIT_CHAR)
   {
     p_start++;
   }
   while((p_start = strchr(p_start,PATH_SPILIT_CHAR)))
   {
-    memcpy(path_buf, path, p_start - path);
-    path_buf[p_start - path] = 0;
+    memcpy(path_buf, p2path, p_start - p2path);
+    path_buf[p_start - p2path] = 0;
     make_dir(path_buf);
     p_start++;
     if(*p_start == 0)
       break;
   }
-  make_dir(path);
+  make_dir(p2path);
   return TRUE;
 }
 
@@ -196,10 +237,17 @@ bool download_file(char *url,char *save_name)
   extern CURL * curl_web_handler;
   curl_easy_setopt(curl_web_handler, CURLOPT_URL, url);
   curl_easy_setopt(curl_web_handler, CURLOPT_WRITEFUNCTION, &write_to_file);
-  FILE * fp = NULL;
-  fp = fopen(save_name, "ab+");
-  curl_easy_setopt(curl_web_handler, CURLOPT_WRITEDATA, fp);
-  fclose(fp);
+  OutStruct outs;
+#ifdef WIN32
+  char gbk_save_name[BUFFER_MAX_SIZE];
+  u2g(save_name, strlen(save_name), gbk_save_name, BUFFER_MAX_SIZE);
+  outs.filename = strdup(gbk_save_name);
+#endif
+#ifndef WIN32
+    outs.filename = strdup(save_name);
+#endif
+  outs.stream = NULL;
+  curl_easy_setopt(curl_web_handler, CURLOPT_WRITEDATA, &outs);
   CURLcode return_code;
   return_code = curl_easy_perform(curl_web_handler);
 
@@ -209,7 +257,12 @@ bool download_file(char *url,char *save_name)
   if(CURLE_OK == return_code && ret_code == FILE_EXISTS)
   {
     printf("File download OK!\n");
-    fclose(fp);
+	if(outs.filename)
+		free(outs.filename);
+	if(outs.stream)
+		fclose(outs.stream);
+	else
+		printf("Error:\n");
   }
   else
   {
@@ -473,6 +526,61 @@ bool string_trip(char *src)
   return TRUE;
 }
 
+int   convert(const char *from, const char *to,char *src, int srclen, char* save, int savelen)  
+{  
+	iconv_t cd;  
+	char   *inbuf = src;  
+	char *outbuf = save;  
+	size_t outbufsize = savelen;  
+	int status = 0;  
+	size_t  savesize = 0;  
+	size_t inbufsize = srclen;  
+	const char* inptr = inbuf;  
+	size_t      insize = inbufsize;  
+	char* outptr = outbuf;  
+	size_t outsize = outbufsize;  
+	cd = iconv_open(to, from);  
+	int one = 1;  
+	iconvctl(cd,ICONV_SET_DISCARD_ILSEQ,&one);  
+	iconv(cd,NULL,NULL,NULL,NULL);  
+	if (inbufsize == 0) {  
+		status = -1;  
+		goto done;  
+	}  
+	while (insize > 0) {  
+		size_t res = iconv(cd,(const char**)&inptr,&insize,&outptr,&outsize);  
+		if (outptr != outbuf) {  
+			int saved_errno = errno;  
+			int outsize = outptr - outbuf;  
+			strncpy(save+savesize, outbuf, outsize);  
+			errno = saved_errno;  
+		}  
+		if (res == (size_t)(-1)) {  
+			if (errno == EILSEQ) {  
+				int one = 1;  
+				iconvctl(cd,ICONV_SET_DISCARD_ILSEQ,&one);  
+				status = -3;  
+			} else if (errno == EINVAL) {  
+				if (inbufsize == 0) {  
+					status = -4;  
+					goto done;  
+				} else {  
+					break;  
+				}  
+			} else if (errno == E2BIG) {  
+				status = -5;  
+				goto done;  
+			} else {  
+				status = -6;  
+				goto done;  
+			}  
+		}  
+	}  
+	status = strlen(save);  
+done:  
+	iconv_close(cd);  
+	return status;  
+}  
 
 int code_convert(char *from_charset, char *to_charset, char *inbuf, int inlen, char *outbuf, int outlen)
 {
@@ -492,7 +600,22 @@ int code_convert(char *from_charset, char *to_charset, char *inbuf, int inlen, c
 
   memset(outbuf, 0 ,outlen);
   if( iconv(handle, p_in, &in_len, p_out, &out_len) == -1)
+  {
+	  int errno_save = errno;
+	  if (errno_save == EILSEQ) {  
+		  printf("EILSEQ\n");
+	  } else if (errno_save == EINVAL) {  
+		  printf("EINVAL\n");
+	  } else if (errno_save == E2BIG) {  
+		  printf("E2BIG\n");
+	  }else
+	  {
+		  printf("%d:Err????\n", errno_save);
+	  }
+	  if(errno_save == 0)
+		  return 1;
     return -1;
+  }
 
   iconv_close(handle);
 
@@ -607,7 +730,9 @@ char *remove_and_convert_html(char *src)
           buf[buf_index++] = '.';
           i += strlen("&hellip;") - 1;
         }
-        else if(strstr(some_special_symbol_buffer, "&amp;"))
+
+		//TODO: FOR libxml2?
+        /*else if(strstr(some_special_symbol_buffer, "&amp;"))
         {
           buf[buf_index++] = '&';
           i += strlen("&amp;") - 1;
@@ -616,7 +741,7 @@ char *remove_and_convert_html(char *src)
         {
           buf[buf_index++] = '<';
           i += strlen("&lt;") - 1;
-        }
+        }*/
         else if(strstr(some_special_symbol_buffer, "&gt;"))
         {
           buf[buf_index++] = '>';
@@ -632,6 +757,15 @@ char *remove_and_convert_html(char *src)
           buf[buf_index++] = ' ';
           i += (strchr(some_special_symbol_buffer, ';') - some_special_symbol_buffer);
         }
+		else if(strchr(some_special_symbol_buffer, '&'))
+		{
+			buf[buf_index++] = '&';
+			buf[buf_index++] = 'a';
+			buf[buf_index++] = 'm';
+			buf[buf_index++] = 'p';
+			buf[buf_index++] = ';';
+			i += (strchr(some_special_symbol_buffer, '&') - some_special_symbol_buffer);
+		}
         else
           buf[buf_index++] = src[i];
       }
@@ -642,7 +776,6 @@ char *remove_and_convert_html(char *src)
   buf[buf_index] = 0;
   strcpy(src,buf);
   
-  //free(buf);
   return src;
 }
 

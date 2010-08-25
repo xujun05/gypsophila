@@ -317,7 +317,7 @@ bool parse_course_file(char *path,p_file_element head)
       sprintf(buf, "%s%s_%s",file_save_prefix,cur->file_title,cur->file_orign_name);
       cur->file_local_location = strdup(buf);
 
-      //download_file(cur->file_url, cur->file_local_location);
+      download_file(cur->file_url, cur->file_local_location);
       
       printf("FILE TYPE NAME:%s\n",cur->file_type);
       printf("FILE ID:%d\n",cur->file_id);
@@ -773,20 +773,20 @@ bool parse_course_discussion(char *path, p_discussion_element head)
     
     
     // print
-    print_discussion_element(cur);
+	//print_discussion_element(cur);
 
     // write to file
     if(cur->discussion_attachment_url)
     {
-	sprintf(buf,"%s%c%d%c%s%c",path, PATH_SPILIT_CHAR, cur->id, PATH_SPILIT_CHAR, "附件", PATH_SPILIT_CHAR);
+		sprintf(buf,"%s%c%d%c%s%c",path, PATH_SPILIT_CHAR,cur->id, PATH_SPILIT_CHAR, "附件", PATH_SPILIT_CHAR);
       make_dir_recusive(buf);
       sprintf(buf, "%s%s", buf, cur->discussion_attachment_name);
       cur->discussion_attachment_location = strdup(buf);
       download_file(cur->discussion_attachment_url, cur->discussion_attachment_location);
     }
     if(cur->reply_head)
-    {
-      sprintf(buf,"%s%c%d%c%s%c",path, PATH_SPILIT_CHAR, cur->id, PATH_SPILIT_CHAR, "回复附件", PATH_SPILIT_CHAR);
+	{
+		sprintf(buf,"%s%c%d%c%s%c",path, PATH_SPILIT_CHAR, cur->id, PATH_SPILIT_CHAR, "回复附件", PATH_SPILIT_CHAR);
       download_reply_attachment(buf, cur->reply_head);
       
     }
@@ -835,7 +835,6 @@ bool get_reply(char *url, p_discussion_element cur)
     src = extract_content_between_fix(src, buf, "<p align=\"left\">", "</p>");
     
     // GET CONTENT
-    // Overflow
     {
       src = extract_content_between_tags(src, cache.mem, "<td colspan=\"4\" class=\"tr_2", "</td>");
       remove_and_convert_html(cache.mem);
@@ -894,11 +893,10 @@ bool get_reply(char *url, p_discussion_element cur)
 
     // GET CONTENT
     {
-      
       src = extract_content_between_tags(src, cache.mem, "<td colspan=\"4\" class=\"tr_2\" align=\"left\"", "</td>");
       remove_and_convert_html(cache.mem);
       if(string_trip(cache.mem))
-        reply_cur->reply_content = strdup(buf);
+        reply_cur->reply_content = strdup(cache.mem);
     }
     
     // GET ATTACHMENT NAME AND URL

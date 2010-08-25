@@ -19,11 +19,14 @@
 #define FILE_EXISTS 200
 #define PATH_SPILIT_CHAR '\\'
 
+// Output Struct
+typedef struct _OutStruct{
+	char *filename;
+	FILE *stream;
+} OutStruct;
 /*
   Boolean Type
 */
-
-
 typedef enum _course_type
 {
   CUR_COURSE,NEXT_COURSE,PRE_COURSE
@@ -126,6 +129,7 @@ bool destroy_all_entity_memory(p_list_entity head);
 
 
 // char set convert
+int   convert(const char *from, const char *to,char *src, int srclen, char* save, int savelen) ;
 int code_convert(char *from_charset,char *to_charset,char *inbuf,int inlen,char *outbuf,int outlen);
 
 int u2g(char *inbuf,int inlen,char *outbuf,int outlen);

@@ -1,7 +1,3 @@
-#include <stdio.h>
-#include <curl/curl.h>
-#include "utils.h"
-#include "course_list.h"
 #include "course_notice.h"
 #include "course_assignments.h"
 #include "course_discussion.h"
@@ -19,7 +15,7 @@ p_course course_head;
 void mirror_course_notice(char *prefix, int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
-	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"课程公告",PATH_SPILIT_CHAR);
+	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"璇剧▼鍏憡",PATH_SPILIT_CHAR);
 	make_dir_recusive(buf);
 	get_course_notice(buf, course_id);
 }
@@ -27,7 +23,7 @@ void mirror_course_notice(char *prefix, int course_id)
 void mirror_course_file(char *prefix, int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
-	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"课程文件",PATH_SPILIT_CHAR);
+	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"璇剧▼鏂囦欢",PATH_SPILIT_CHAR);
 	make_dir_recusive(buf);
 	get_course_file(buf, course_id);
 }
@@ -35,7 +31,7 @@ void mirror_course_file(char *prefix, int course_id)
 void mirror_course_assignment(char *prefix, int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
-	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"课程作业",PATH_SPILIT_CHAR);
+	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"璇剧▼浣滀笟",PATH_SPILIT_CHAR);
 	make_dir_recusive(buf);
 	get_course_assignment(buf, course_id);
 }
@@ -43,7 +39,7 @@ void mirror_course_assignment(char *prefix, int course_id)
 void mirror_course_discussion(char *prefix, int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
-	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"课程讨论",PATH_SPILIT_CHAR);
+	sprintf(buf,"%s%c%s%c",prefix, PATH_SPILIT_CHAR,"璇剧▼璁ㄨ",PATH_SPILIT_CHAR);
 	make_dir_recusive(buf);
 	get_course_discussion(buf, course_id);
 }
@@ -118,13 +114,13 @@ void mirror_course(char *prefix)
     
     //mirror_course_notice(buf, p->course_id);
 
-  //mirror_course_file(buf, p->course_id);
+	mirror_course_file(buf, p->course_id);
 
 
 	//mirror_course_assignment(buf, p->course_id);
 
 
-	mirror_course_discussion(buf, p->course_id);
+	//mirror_course_discussion(buf, p->course_id);
     p = p->next;
   }
 }

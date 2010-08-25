@@ -98,7 +98,7 @@ void write_all_file_to_xmlfile(char *filename, p_file_element head)
     file_local_location = xmlNewChild(file, NULL ,BAD_CAST "localLocation" , BAD_CAST p->file_local_location);
     p = p->next;
   }
-  xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+  xmlSaveFormatFileEnc(filename, doc, "GBK", 1);
   
   /*free the document */
   xmlFreeDoc(doc);

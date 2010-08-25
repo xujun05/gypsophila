@@ -154,7 +154,7 @@ void write_all_assignment_to_xmlfile(char *filename, p_assignment_element head)
     //file_url = xmlNewChild(file, NULL ,BAD_CAST "remoteUrl" , BAD_CAST p->file_url);
     p = p->next;
   }
-  xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+  xmlSaveFormatFileEnc(filename, doc, "GBK", 1);
   
   /*free the document */
   xmlFreeDoc(doc);

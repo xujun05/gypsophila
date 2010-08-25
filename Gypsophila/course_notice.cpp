@@ -81,7 +81,7 @@ void write_all_notice_to_xmlfile(char *filename, p_notice_element head)
     notice_content = xmlNewChild(notice, NULL ,BAD_CAST "content" , BAD_CAST p->notice_body);
     p = p->next;
   }
-  xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+  xmlSaveFormatFileEnc(filename, doc, "GBK", 1);
   
   /*free the document */
   xmlFreeDoc(doc);

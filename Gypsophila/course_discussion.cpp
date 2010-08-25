@@ -173,6 +173,10 @@ void print_discussion_element(p_discussion_element p)
 // this is a index file
 void write_all_discussion_to_xmlfile(char *filename, p_discussion_element head)
 {
+#ifdef WIN32
+	char gbk_filename[BUFFER_MAX_SIZE];
+	u2g(filename,strlen(filename), gbk_filename, BUFFER_MAX_SIZE);
+#endif
   xmlDocPtr doc = NULL;
   xmlNodePtr root_node = NULL, discussion = NULL;
   doc = xmlNewDoc(BAD_CAST "1.0");
@@ -204,7 +208,12 @@ void write_all_discussion_to_xmlfile(char *filename, p_discussion_element head)
     }  
     p = p->next;
   }
+#ifdef WIN32
+  xmlSaveFormatFileEnc(gbk_filename, doc, "UTF-8", 1);
+#endif
+#ifndef WIN32
   xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
+#endif
   
   /*free the document */
   xmlFreeDoc(doc);
@@ -216,6 +225,10 @@ void write_all_discussion_to_xmlfile(char *filename, p_discussion_element head)
 
 void write_all_reply_to_xmlfile_by_discussion_id(char *filename, p_discussion_element cur)
 {
+#ifdef WIN32
+	char gbk_filename[BUFFER_MAX_SIZE];
+	u2g(filename,strlen(filename), gbk_filename, BUFFER_MAX_SIZE);
+#endif
   xmlDocPtr doc = NULL;
   xmlNodePtr root_node = NULL, discussion = NULL, reply = NULL;
   doc = xmlNewDoc(BAD_CAST "1.0");
@@ -271,8 +284,12 @@ void write_all_reply_to_xmlfile_by_discussion_id(char *filename, p_discussion_el
       xmlNewChild(reply, NULL ,BAD_CAST "attachmentLocation" , BAD_CAST p->reply_attachment_location);
     p = p->next;
   }
+#ifdef WIN32
+  xmlSaveFormatFileEnc(gbk_filename, doc, "UTF-8", 1);
+#endif
+#ifndef WIN32
   xmlSaveFormatFileEnc(filename, doc, "UTF-8", 1);
-  
+#endif
   /*free the document */
   xmlFreeDoc(doc);
   
