@@ -6,7 +6,7 @@ const char REPLY_URL_PREFIX[] = "http://learn.tsinghua.edu.cn/MultiLanguage/publ
 
 
 // parse every course notice page
-bool parse_course_notice(char *path,p_notice_element head)
+bool parse_course_notice(CURL *curl_web_handler,char *path,p_notice_element head)
 {
 	extern cache_memory cache;
 
@@ -65,7 +65,7 @@ bool parse_course_notice(char *path,p_notice_element head)
 		str_add_prefix(NOTICE_URL_PREFIX,buf);
 		//printf("%s",buf);
 
-		cur->notice_body = get_notice_content(buf);
+		cur->notice_body = get_notice_content(curl_web_handler,buf);
 		//    <td width="87%" class="tr_l2
 		// CURL DOWNLOAD
 		// Get NOTICE Publisher
@@ -139,30 +139,28 @@ bool parse_course_notice(char *path,p_notice_element head)
 }
 
 // parse course notice page.
-bool get_course_notice(char *path, int course_id)
+bool get_course_notice(CURL* curl_web_handler, char *path, int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
 	memset(buf, 0 ,BUFFER_MAX_SIZE);
 
 	sprintf(buf,"%s%s%d",tsinghua_prefix,COURSE_NOTICE_URL_INFIX, course_id);
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
 	curl_easy_setopt(curl_web_handler, CURLOPT_FOLLOWLOCATION, 1);
 
-	if(!copy_web_page_to_memory(buf, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, buf, &copy_to_buffer, NULL))
 		return FALSE;
 
 	p_notice_element head = NULL;
 	head = init_notice_list(head);
-	return parse_course_notice(path, head);
+	return parse_course_notice(curl_web_handler,path, head);
 }
 
 // get notice content
-char *get_notice_content(char *URL)
+char *get_notice_content(CURL* curl_web_handler, char *URL)
 {
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
-	if(!copy_web_page_to_memory(URL, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, URL, &copy_to_buffer, NULL))
 		return FALSE;
 	p_list_entity entity_head = NULL;
 	entity_head = basic_parse_page(cache.mem,"<td width=\"87%\" class=\"tr_l2\" colspan=\"3\"","</td>");
@@ -193,28 +191,27 @@ char *get_notice_content(char *URL)
 
 
 // Start to parse File Download
-bool get_course_file(char *path, int course_id)
+bool get_course_file(CURL* curl_web_handler, char *path, int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
 	memset(buf, 0 ,BUFFER_MAX_SIZE);
 
 	sprintf(buf,"%s%s%d",tsinghua_prefix,COURSE_DOCUMENTS_URL_INFIX, course_id);
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
 	curl_easy_setopt(curl_web_handler, CURLOPT_FOLLOWLOCATION, 1);
 
-	if(!copy_web_page_to_memory(buf, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, buf, &copy_to_buffer, NULL))
 		return FALSE;
 
 	// init list
 	p_file_element head = NULL;
 	head = init_file_list(head);
-	return parse_course_file(path, head);
+	return parse_course_file(curl_web_handler,path, head);
 }
 
 
 
-bool parse_course_file(char *path,p_file_element head)
+bool parse_course_file(CURL *curl_web_handler,char *path,p_file_element head)
 {
 	extern cache_memory cache;
 
@@ -317,7 +314,7 @@ bool parse_course_file(char *path,p_file_element head)
 			sprintf(buf, "%s%s_%s",file_save_prefix,cur->file_title,cur->file_orign_name);
 			cur->file_local_location = strdup(buf);
 
-			download_file(cur->file_url, cur->file_local_location);
+			download_file(curl_web_handler,cur->file_url, cur->file_local_location);
 
 			printf("FILE TYPE NAME:%s\n",cur->file_type);
 			printf("FILE ID:%d\n",cur->file_id);
@@ -355,7 +352,7 @@ bool parse_course_file(char *path,p_file_element head)
 // Assignment
 
 // Get Assignments
-bool get_course_assignment(char *path, int course_id)
+bool get_course_assignment(CURL* curl_web_handler, char *path, int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
 	memset(buf, 0 ,BUFFER_MAX_SIZE);
@@ -364,19 +361,17 @@ bool get_course_assignment(char *path, int course_id)
 	//printf("%s\n",buf);
 
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
-	//curl_easy_setopt(curl_web_handler, CURLOPT_FOLLOWLOCATION, 1);
 
-	if(!copy_web_page_to_memory(buf, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, buf, &copy_to_buffer, NULL))
 		return FALSE;
 
 	// init list
 	p_assignment_element head = NULL;
 	head = init_assignment_list(head);
-	return parse_course_assignment(path, head);
+	return parse_course_assignment(curl_web_handler,path, head);
 }
 
-bool parse_course_assignment(char *path, p_assignment_element head)
+bool parse_course_assignment(CURL *curl_web_handler,char *path, p_assignment_element head)
 {
 	extern cache_memory cache;
 
@@ -411,7 +406,7 @@ bool parse_course_assignment(char *path, p_assignment_element head)
 		str_add_prefix(HOMEWORK_URL_PREFIX,buf);
 
 		// GET DETAIL
-		get_assignment_detail(buf,cur);
+		get_assignment_detail(curl_web_handler,buf,cur);
 
 		// GET TIME
 		src = extract_content_between_fix( src, buf, "<td width=\"10%\">", "</td>");
@@ -431,7 +426,7 @@ bool parse_course_assignment(char *path, p_assignment_element head)
 		src = extract_content_between_fix (src, buf, "javascript:window.location.href='","';");
 		extract_content_between_fix (src, buf,"javascript:window.location.href='","'\"");
 		if(str_add_prefix(HOMEWORK_URL_PREFIX, buf))
-			get_assignment_score(buf,cur);
+			get_assignment_score(curl_web_handler,buf,cur);
 
 
 		printf("ASSIGNMENT NAME: %s\n",cur->assignment_name);
@@ -454,7 +449,7 @@ bool parse_course_assignment(char *path, p_assignment_element head)
 			make_dir_recusive(buf);
 			sprintf(buf, "%s%s", buf, cur->assignment_attachment_name);
 			cur->assignment_attachment_location = strdup(buf);
-			download_file(cur->assignment_attachment_url, cur->assignment_attachment_location);
+			download_file(curl_web_handler,cur->assignment_attachment_url, cur->assignment_attachment_location);
 		}
 
 		if(cur->my_handin_attachment_url)
@@ -463,7 +458,7 @@ bool parse_course_assignment(char *path, p_assignment_element head)
 			make_dir_recusive(buf);
 			sprintf(buf, "%s%s", buf, cur->my_handin_attachment_name);
 			cur->my_handin_attachment_location = strdup(buf); 
-			download_file(cur->my_handin_attachment_url, cur->my_handin_attachment_location);
+			download_file(curl_web_handler,cur->my_handin_attachment_url, cur->my_handin_attachment_location);
 		}
 
 
@@ -483,11 +478,10 @@ bool parse_course_assignment(char *path, p_assignment_element head)
 	return TRUE;
 }
 
-bool get_assignment_score(char *url, p_assignment_element cur)
+bool get_assignment_score(CURL* curl_web_handler, char *url, p_assignment_element cur)
 {
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
-	if(!copy_web_page_to_memory(url, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, url, &copy_to_buffer, NULL))
 		return FALSE;
 	p_list_entity entity_head = NULL;
 	entity_head = basic_parse_page(cache.mem,"<td colspan=\"3\" class=\"tr_","</td>");
@@ -554,11 +548,10 @@ bool get_assignment_score(char *url, p_assignment_element cur)
 	return TRUE;
 }
 
-bool get_assignment_detail(char *url, p_assignment_element cur)
+bool get_assignment_detail( CURL* curl_web_handler, char *url, p_assignment_element cur)
 {
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
-	if(!copy_web_page_to_memory(url, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, url, &copy_to_buffer, NULL))
 		return FALSE;
 	p_list_entity entity_head = NULL;
 	// utf8 cache buffer covert it 
@@ -677,7 +670,7 @@ bool get_assignment_detail(char *url, p_assignment_element cur)
 }
 
 // Get Discussion List, only download the html page
-bool get_course_discussion(char *path,int course_id)
+bool get_course_discussion(CURL* curl_web_handler, char *path,int course_id)
 {
 	char buf[BUFFER_MAX_SIZE];
 	memset(buf, 0 ,BUFFER_MAX_SIZE);
@@ -686,21 +679,20 @@ bool get_course_discussion(char *path,int course_id)
 	sprintf(buf,"%s%s%d",tsinghua_prefix,COURSE_DISCUSSION_URL_INFIX, course_id);
 
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
 	// AUTOMATIC HTTP FORWARD
 	curl_easy_setopt(curl_web_handler, CURLOPT_FOLLOWLOCATION, 1);
 
-	if(!copy_web_page_to_memory(buf, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, buf, &copy_to_buffer, NULL))
 		return FALSE;
 
 	// init list
 	p_discussion_element head = NULL;
 	head = init_discussion_list(head);
-	return parse_course_discussion(path, head);
+	return parse_course_discussion(curl_web_handler,path, head);
 }
 
 // Get discussion list, main function
-bool parse_course_discussion(char *path, p_discussion_element head)
+bool parse_course_discussion(CURL *curl_web_handler,char *path, p_discussion_element head)
 {
 	extern cache_memory cache;
 
@@ -768,7 +760,7 @@ bool parse_course_discussion(char *path, p_discussion_element head)
 		cur->discussion_handin_time = strdup(buf);
 
 		// Get content...etc
-		if(!get_reply(reply_url, cur))
+		if(!get_reply(curl_web_handler,reply_url, cur))
 			printf("Get Reply Error, Check Network.\n");
 
 
@@ -782,12 +774,12 @@ bool parse_course_discussion(char *path, p_discussion_element head)
 			make_dir_recusive(buf);
 			sprintf(buf, "%s%s", buf, cur->discussion_attachment_name);
 			cur->discussion_attachment_location = strdup(buf);
-			download_file(cur->discussion_attachment_url, cur->discussion_attachment_location);
+			download_file(curl_web_handler,cur->discussion_attachment_url, cur->discussion_attachment_location);
 		}
 		if(cur->reply_head)
 		{
 			sprintf(buf,"%s%c%d%c%s%c",path, PATH_SPILIT_CHAR, cur->id, PATH_SPILIT_CHAR, "回复附件", PATH_SPILIT_CHAR);
-			download_reply_attachment(buf, cur->reply_head);
+			download_reply_attachment(curl_web_handler,buf, cur->reply_head);
 
 		}
 
@@ -811,11 +803,10 @@ bool parse_course_discussion(char *path, p_discussion_element head)
 
 
 // Get replys
-bool get_reply(char *url, p_discussion_element cur)
+bool get_reply(CURL* curl_web_handler, char *url, p_discussion_element cur)
 {
 	extern cache_memory cache;
-	extern CURL* curl_web_handler;
-	if(!copy_web_page_to_memory(url, &copy_to_buffer, NULL))
+	if(!copy_web_page_to_memory(curl_web_handler, url, &copy_to_buffer, NULL))
 		return FALSE;
 
 	// split the memory and copy it into entity list

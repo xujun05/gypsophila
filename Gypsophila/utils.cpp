@@ -249,7 +249,7 @@ size_t write_to_file(void *buf, size_t size, size_t nmemb, void *user_p)
 /*
 Give an url and get this web page.
 */
-bool  copy_web_page_to_memory(char *url,void *parse_function, void *userdata)
+bool  copy_web_page_to_memory(CURL * curl_web_handler, char *url,void *parse_function, void *userdata)
 {
 	curl_easy_setopt(curl_web_handler, CURLOPT_URL,url);
 	curl_easy_setopt(curl_web_handler, CURLOPT_WRITEFUNCTION, parse_function);
@@ -325,9 +325,8 @@ bool download_web_page(char *url)
 /*
 Give an url and get the file downloaded.
 */
-bool download_file(char *url,char *save_name)
+bool download_file(CURL * curl_web_handler, char *url,char *save_name)
 {
-	extern CURL * curl_web_handler;
 	curl_easy_setopt(curl_web_handler, CURLOPT_URL, url);
 	curl_easy_setopt(curl_web_handler, CURLOPT_WRITEFUNCTION, &write_to_file);
 	OutStruct outs;
@@ -369,7 +368,7 @@ bool download_file(char *url,char *save_name)
 /*
 Auth the user and Password.
 */
-bool login_learn_tsinghua(char * username,char *password)
+bool login_learn_tsinghua(CURL * curl_web_handler,char * username,char *password)
 {
 	char buf[BUFFER_MAX_SIZE];
 	memset(buf,0,BUFFER_MAX_SIZE);

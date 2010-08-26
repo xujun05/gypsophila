@@ -33,7 +33,11 @@ int getch(void);
 #define ENTER     13
 #define ALARM     7
 // return the passwd pointer
+#ifdef WIN32
+__declspec(dllexport) char *getPasswd(const char *prompt, char *passwd, int MAX_LENGTH);
+#else
 char *getPasswd(const char *prompt, char *passwd, int MAX_LENGTH);
+#endif
 // Output Struct
 typedef struct _OutStruct{
 	char *filename;
@@ -43,7 +47,7 @@ typedef struct _OutStruct{
 /*
 Boolean Type
 */
-typedef enum _course_type
+__declspec(dllexport) typedef enum _course_type
 {
 	CUR_COURSE,NEXT_COURSE,PRE_COURSE
 }course_type;
@@ -55,14 +59,14 @@ typedef struct _list_entity
 }list_entity, *p_list_entity;
 
 
-typedef struct _cache_memory 
+__declspec(dllexport)  typedef struct _cache_memory 
 {
 	char *mem;
 	int offset;
 	size_t size;
 }cache_memory;
 
-typedef struct _course 
+__declspec(dllexport)  typedef struct _course 
 {
 	int course_id;
 	char *course_name;
@@ -93,7 +97,7 @@ size_t write_to_file(void *buf, size_t size, size_t nmemb, void *user_p);
 /*
 Some userful Functions
 */
-bool copy_web_page_to_memory(char *url,void *parse_function, void *userdata);
+bool copy_web_page_to_memory(CURL * curl_web_handler, char *url,void *parse_function, void *userdata);
 //size_t save_course_list(void *buf, size_t size, size_t nmemb, void *user_p);
 //size_t save_course_file(void *buf, size_t size, size_t nmemb, void *user_p);
 //size_t save_course_file(void *buf, 
@@ -107,22 +111,22 @@ bool make_dir_recusive(char *path);
 /*
 * download file into save location.
 */
-bool download_file(char *url,char *save_name);
+bool download_file(CURL *curl_web_handler, char *url,char *save_name);
 
 /*
 Give an url and get this web page.
 */
-bool download_web_page(char *url);
+bool download_web_page(CURL *curl_web_handler,char *url);
 
 /*
 Give an url and get the file downloaded.
 */
-bool download_file(char *url,char *save_name);
+bool download_file(CURL *curl_web_handler,char *url,char *save_name);
 
 /*
 Auth the user and Password.
 */
-bool login_learn_tsinghua(char * username,char *password);
+__declspec(dllexport) bool login_learn_tsinghua(CURL *curl_web_handler, char * username,char *password);
 
 /*
 basic parse the web page

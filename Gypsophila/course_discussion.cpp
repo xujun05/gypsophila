@@ -301,7 +301,7 @@ void write_all_reply_to_xmlfile_by_discussion_id(char *filename, p_discussion_el
 }
 
 
-void download_reply_attachment(char *path, p_reply_element head)
+void download_reply_attachment(CURL *curl_web_handler,char *path, p_reply_element head)
 {
 	p_reply_element p = head->next;
 	char buf[BUFFER_MAX_SIZE];
@@ -317,7 +317,7 @@ void download_reply_attachment(char *path, p_reply_element head)
 			}
 			sprintf(buf,"%s%s",path, p->reply_attachment_name);
 			p->reply_attachment_location = strdup(buf);
-			download_file(p->reply_attachment_url, p->reply_attachment_location);
+			download_file(curl_web_handler,p->reply_attachment_url, p->reply_attachment_location);
 		}
 		p = p->next;
 	}

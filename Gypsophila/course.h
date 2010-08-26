@@ -21,27 +21,27 @@ extern p_course course_head;
 // parse course page through course id and type 
 //bool parse_each_course_page(p_course course);
 
-char *download_file_content(char *url,char *save_location);
+char *download_file_content(CURL *curl_web_handler,char *url,char *save_location);
 
 // Get Course Notice
-bool get_course_notice(char *path,int course_id);
-bool parse_course_notice(char *path,p_notice_element head);
-char *get_notice_content(char *url);
+bool get_course_notice(CURL *curl_web_handler, char *path,int course_id);
+bool parse_course_notice(CURL *curl_web_handler,char *path,p_notice_element head);
+char *get_notice_content(CURL *curl_web_handler,char *url);
 
 // Get Course File
-bool get_course_file(char *path,int course_id);
-bool parse_course_file(char *path, p_file_element head);
+bool get_course_file(CURL *curl_web_handler,char *path,int course_id);
+bool parse_course_file(CURL *curl_web_handler,char *path, p_file_element head);
 
 
 // Get Assignments
-bool get_course_assignment(char *path, int course_id);
-bool parse_course_assignment(char *path, p_assignment_element head);
-bool get_assignment_score(char *url, p_assignment_element cur);
-bool get_assignment_detail(char *url, p_assignment_element cur);
+bool get_course_assignment(CURL *curl_web_handler,char *path, int course_id);
+bool parse_course_assignment(CURL *curl_web_handler,char *path, p_assignment_element head);
+bool get_assignment_score(CURL *curl_web_handler,char *url, p_assignment_element cur);
+bool get_assignment_detail(CURL *curl_web_handler,char *url, p_assignment_element cur);
 
 // Get Discussion List
-bool get_course_discussion(char *path, int course_id);
-bool parse_course_discussion(char *path, p_discussion_element head);
+bool get_course_discussion(CURL *curl_web_handler,char *path, int course_id);
+bool parse_course_discussion(CURL *curl_web_handler,char *path, p_discussion_element head);
 // Get Reply List
-bool get_reply(char *url, p_discussion_element cur);
+bool get_reply(CURL *curl_web_handler,char *url, p_discussion_element cur);
 #endif

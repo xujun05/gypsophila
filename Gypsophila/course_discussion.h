@@ -53,5 +53,5 @@ void write_all_discussion_to_xmlfile(char *filename, p_discussion_element head);
 void write_all_reply_to_xmlfile_by_discussion_id(char *filename, p_discussion_element p);
 
 
-void download_reply_attachment(char *path, p_reply_element head);
+void download_reply_attachment(CURL *curl_web_handler,char *path, p_reply_element head);
 #endif
