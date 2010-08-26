@@ -1,3 +1,12 @@
+2010-08-26 20:10
+1. Update Visual Studio 2008 path(include path and library path)
+2. Password input problem: now password will echo "*"
+
+todo:
+1. ini files reading
+2. multithread downloading
+3. WINDOWS's UI
+
 2010-08-25 23:13 Fixed bugs
 1. msdos/win32 filepath: msdosify() function solve this problem
 2. course.c:251 the pointer plus 1 can solve this problem

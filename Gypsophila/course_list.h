@@ -12,7 +12,7 @@ extern p_course course_head;
 
 bool get_course_list(course_type type);
 
-  
+
 // Get the course list
 bool parse_course_list_page(cache_memory *cache, course_type type);
 

@@ -48,146 +48,147 @@ void mirror_course(char *prefix);
 
 void mirror_course_frome_course_id(int course_id, char *prefix)
 {
-  make_dir_recusive(prefix);
-  printf("Create Pahth %s, DONE!\n", prefix);
+	make_dir_recusive(prefix);
+	printf("Create Pahth %s, DONE!\n", prefix);
 
-  if(!get_course_list(PRE_COURSE))
-  {
-    printf("COURSE LIST ERROR\n");
-  }
-  
-  char buf[BUFFER_MAX_SIZE];
-  
-  p_course p = course_head->next;
-  bool isStart = FALSE;
-  while(p)
-  {
+	if(!get_course_list(PRE_COURSE))
+	{
+		printf("COURSE LIST ERROR\n");
+	}
 
-    if(p->course_id == course_id)
-    {
+	char buf[BUFFER_MAX_SIZE];
 
-      isStart = TRUE;
-    }
-    if(!isStart)
-    {
-      printf("Jump %s\n", p->course_name); 
-      p = p->next;
-      continue;
-    }
-    
-    
-    sprintf(buf,"%s%c%s%c%s",prefix,PATH_SPILIT_CHAR,p->course_term,PATH_SPILIT_CHAR,p->course_name);
-    make_dir_recusive(buf);
-    
-    mirror_course_notice((char *)buf, p->course_id);
+	p_course p = course_head->next;
+	bool isStart = FALSE;
+	while(p)
+	{
 
-	mirror_course_file((char *)buf, p->course_id);	
+		if(p->course_id == course_id)
+		{
+
+			isStart = TRUE;
+		}
+		if(!isStart)
+		{
+			printf("Jump %s\n", p->course_name); 
+			p = p->next;
+			continue;
+		}
 
 
-    mirror_course_assignment((char *)buf, p->course_id);
+		sprintf(buf,"%s%c%s%c%s",prefix,PATH_SPILIT_CHAR,p->course_term,PATH_SPILIT_CHAR,p->course_name);
+		make_dir_recusive(buf);
+
+		mirror_course_notice((char *)buf, p->course_id);
+
+		mirror_course_file((char *)buf, p->course_id);	
 
 
-	mirror_course_discussion((char *)buf, p->course_id);
-    p = p->next;
-  }
+		mirror_course_assignment((char *)buf, p->course_id);
+
+
+		mirror_course_discussion((char *)buf, p->course_id);
+		p = p->next;
+	}
 }
 
 
 void mirror_course(char *prefix)
 {
-  make_dir_recusive(prefix);
-  printf("Create Pahth %s, DONE!\n", prefix);
+	make_dir_recusive(prefix);
+	printf("Create Pahth %s, DONE!\n", prefix);
 
-  if(!get_course_list(PRE_COURSE))
-  {
-    printf("COURSE LIST ERROR\n");
-  }
-  
-  char buf[BUFFER_MAX_SIZE];
-  p_course p = NULL;
-  if(course_head)
-	p = course_head->next;
-  while(p)
-  {
-    sprintf(buf,"%s%c%s%c%s",prefix,PATH_SPILIT_CHAR,p->course_term,PATH_SPILIT_CHAR,p->course_name);
-    make_dir_recusive(buf);
-    
-    mirror_course_notice(buf, p->course_id);
+	if(!get_course_list(PRE_COURSE))
+	{
+		printf("COURSE LIST ERROR\n");
+	}
 
-	//if(p->course_id == 62457)
-	mirror_course_file(buf, p->course_id);
+	char buf[BUFFER_MAX_SIZE];
+	p_course p = NULL;
+	if(course_head)
+		p = course_head->next;
+	while(p)
+	{
+		sprintf(buf,"%s%c%s%c%s",prefix,PATH_SPILIT_CHAR,p->course_term,PATH_SPILIT_CHAR,p->course_name);
+		make_dir_recusive(buf);
 
+		mirror_course_notice(buf, p->course_id);
 
-	mirror_course_assignment(buf, p->course_id);
+		//if(p->course_id == 62457)
+		mirror_course_file(buf, p->course_id);
 
 
-	mirror_course_discussion(buf, p->course_id);
-    p = p->next;
-  }
+		mirror_course_assignment(buf, p->course_id);
+
+
+		mirror_course_discussion(buf, p->course_id);
+		p = p->next;
+	}
 }
 
 
 
 int main(int argc, char *argv[])
 {
-  printf("WebCourse@Tsinghua(Console Edition)\n");
-  CURLcode return_code;
-  return_code = curl_global_init(CURL_GLOBAL_ALL);
+	printf("WebCourse@Tsinghua(Console Edition)\n");
+	CURLcode return_code;
+	return_code = curl_global_init(CURL_GLOBAL_ALL);
 
-  // check if init right
-  if(CURLE_OK != return_code){
-    printf("init the libcurl error\n");
-    return -1;
-  }
+	// check if init right
+	if(CURLE_OK != return_code){
+		printf("init the libcurl error\n");
+		return -1;
+	}
 
-  curl_web_handler = curl_easy_init();
-  if( NULL == curl_web_handler)
-  {
-    printf("Web Handle init error!\n");
-    curl_global_cleanup();
-    return -1;
-  }
-  
-  char path[BUFFER_MAX_SIZE];
-  
-  printf("Enter your username:");
-  scanf("%s",username);
-  printf("Enter your passwd:");
-  scanf("%s",passwd);
-  printf("Enter the path for saving course:");
-  scanf("%s", path);
+	curl_web_handler = curl_easy_init();
+	if( NULL == curl_web_handler)
+	{
+		printf("Web Handle init error!\n");
+		curl_global_cleanup();
+		return -1;
+	}
 
+	char path[BUFFER_MAX_SIZE];
 
-
-  if(!login_learn_tsinghua(username,passwd))
-  {
-    printf("Auth Failed.\n");
-    return -1;
-  }
-  printf("Login OK\n");
-
-  cache.mem = (char *)malloc(CACHE_INIT_SIZE);
-  memset(cache.mem, 0 ,CACHE_INIT_SIZE);
-  cache.offset = 0;
-  cache.mem[cache.offset] = '\0';
-  cache.size = CACHE_INIT_SIZE;
+	printf("Enter your username:");
+	scanf("%s",username);
+	getPasswd("Please enter your password:", passwd, 32);
+	printf("Default path for saving file is .\\Course:");
+	scanf("%s", path);
+	if(path[0] == NULL)
+		strcpy(path, "Course");
 
 
-  mirror_course(path);
-  //mirror_course_frome_course_id(start_id, path);
-  
-  printf("Print OK\n");
 
-  
-// free cache memory.
-  if(cache.mem)
-    free(cache.mem);
+	if(!login_learn_tsinghua(username,passwd))
+	{
+		printf("Auth Failed.\n");
+		return -1;
+	}
+	printf("Login OK\n");
 
-  curl_easy_cleanup(curl_web_handler);
-  
-  curl_global_cleanup();
+	cache.mem = (char *)malloc(CACHE_INIT_SIZE);
+	memset(cache.mem, 0 ,CACHE_INIT_SIZE);
+	cache.offset = 0;
+	cache.mem[cache.offset] = '\0';
+	cache.size = CACHE_INIT_SIZE;
 
-  int k;
-  scanf("%d", &k);
-  return 0;
+
+	mirror_course(path);
+	//mirror_course_frome_course_id(start_id, path);
+
+	printf("Print OK\n");
+
+
+	// free cache memory.
+	if(cache.mem)
+		free(cache.mem);
+
+	curl_easy_cleanup(curl_web_handler);
+
+	curl_global_cleanup();
+
+	int k;
+	scanf("%d", &k);
+	return 0;
 }

@@ -7,13 +7,13 @@
 
 typedef struct _notice_element
 {
-  int notice_id;
-  char *notice_title;
-  char *notice_publisher;
-  bool is_highlight;
-  char *notice_time;
-  char *notice_body;
-  struct _notice_element *next;
+	int notice_id;
+	char *notice_title;
+	char *notice_publisher;
+	bool is_highlight;
+	char *notice_time;
+	char *notice_body;
+	struct _notice_element *next;
 }notice_element, *p_notice_element;
 
 // init operation

@@ -2,3 +2,5 @@
 *.ilk
 *.pdb
 no
+cookie*
+Course*

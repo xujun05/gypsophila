@@ -7,21 +7,21 @@
 
 typedef struct _assignment_element
 {
-  char *assignment_name;
-  char *assignment_time;
-  char *assignment_deadline;
-  char *assignment_status;
-  char *assignment_score; //3th
-  char *assignment_comment; //3th
-  char *assignment_description; //2th
-  char *assignment_attachment_url;//2th
-  char *assignment_attachment_name; //2th
-  char *assignment_attachment_location;
-  char *my_handin_description; //3th
-  char *my_handin_attachment_url;//3th
-  char *my_handin_attachment_name; //3th
-  char *my_handin_attachment_location;
-  struct _assignment_element *next;
+	char *assignment_name;
+	char *assignment_time;
+	char *assignment_deadline;
+	char *assignment_status;
+	char *assignment_score; //3th
+	char *assignment_comment; //3th
+	char *assignment_description; //2th
+	char *assignment_attachment_url;//2th
+	char *assignment_attachment_name; //2th
+	char *assignment_attachment_location;
+	char *my_handin_description; //3th
+	char *my_handin_attachment_url;//3th
+	char *my_handin_attachment_name; //3th
+	char *my_handin_attachment_location;
+	struct _assignment_element *next;
 }assignment_element, *p_assignment_element;
 
 // init operation

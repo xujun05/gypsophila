@@ -1,3 +1,6 @@
+/*
+encoding=UTF-8
+*/
 #ifndef _COURSE_H
 #define _COURSE_H
 #include <ctype.h>

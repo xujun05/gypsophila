@@ -5,30 +5,30 @@
 #include "extern.h"
 #include "utils.h"
 typedef struct _reply_element{
-  char * reply_author;
-  char * reply_time;
-  char * reply_content;
-  char * reply_attachment_url;
-  char * reply_attachment_location;
-  char * reply_attachment_name;
-  struct _reply_element *next;
+	char * reply_author;
+	char * reply_time;
+	char * reply_content;
+	char * reply_attachment_url;
+	char * reply_attachment_location;
+	char * reply_attachment_name;
+	struct _reply_element *next;
 }reply_element, *p_reply_element;
 
 
 typedef struct _discussion_element
 {
-  int id;//
-  char *discussion_topic;//**
-  char *discussion_author;//**
-  int discussion_reply;//
-  int discussion_click;//
-  char *discussion_handin_time;//**
-  char *discussion_content;
-  char *discussion_attachment_url;
-  char *discussion_attachment_location;
-  char *discussion_attachment_name;
-  p_reply_element reply_head;// reply list
-  struct _discussion_element *next;
+	int id;//
+	char *discussion_topic;//**
+	char *discussion_author;//**
+	int discussion_reply;//
+	int discussion_click;//
+	char *discussion_handin_time;//**
+	char *discussion_content;
+	char *discussion_attachment_url;
+	char *discussion_attachment_location;
+	char *discussion_attachment_name;
+	p_reply_element reply_head;// reply list
+	struct _discussion_element *next;
 }discussion_element, *p_discussion_element;
 
 // init discussion list operation
