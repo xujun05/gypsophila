@@ -28,16 +28,16 @@ bool  init_file_element (p_file_element p)
 	return TRUE;
 }
 
-// insert operation
-// discard!!!
-/*bool insert_element(p_file_element pre, p_file_element node)
+void print_file_element(p_file_element p)
 {
-pre->next = node;
-node->next = NULL;
-return TRUE;
-}*/
-
-
+	printf("FILE TYPE NAME:%s\n",p->file_type);
+	printf("FILE ID:%d\n",p->file_id);
+	printf("FILE TITLE: %s\n",p->file_title);
+	printf("FILE SERVER NAME: %s\n", p->file_orign_name);
+	printf("FILE ABSTRACT:%s\n",p->file_abstract);
+	printf("FILE UP TIME: %s\n", p->file_up_time);
+	printf("FILE URL:%s\n",p->file_url);
+}
 // destroy all
 bool destroy_all_file_element(p_file_element head)
 {

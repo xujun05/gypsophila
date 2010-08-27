@@ -114,13 +114,7 @@ bool parse_course_notice(CURL *curl_web_handler,char *path,p_notice_element head
 		buf[p_end - p_start] = 0;
 		cur->notice_time = strdup(buf);
 
-		printf("ID:%d\n",cur->notice_id);
-		printf("PUBLISHER:%s\n",cur->notice_publisher);
-		printf("HIGHLIGHT:%d\n",cur->is_highlight);
-		printf("TIME:%s\n",cur->notice_time);
-		printf("TITLE:%s\n",cur->notice_title);
-		printf("CONTENT:%s\n",cur->notice_body);
-
+		//print_notice_element(cur);
 
 		pre->next = cur;
 		pre = cur;
@@ -250,6 +244,8 @@ bool parse_course_file(CURL *curl_web_handler,char *path,p_file_element head)
 	}
 
 	// because 0 not use.
+	p_file_element pre = head;
+	p_file_element cur = head->next;
 
 	for(i = 1;i <= no_of_file_type;i++)
 	{
@@ -262,8 +258,6 @@ bool parse_course_file(CURL *curl_web_handler,char *path,p_file_element head)
 
 		// for loop
 		p_list_entity p = entity_head->next;
-		p_file_element pre = head;
-		p_file_element cur = head->next;
 
 		while(p)
 		{
@@ -316,13 +310,7 @@ bool parse_course_file(CURL *curl_web_handler,char *path,p_file_element head)
 
 			download_file(curl_web_handler,cur->file_url, cur->file_local_location);
 
-			printf("FILE TYPE NAME:%s\n",cur->file_type);
-			printf("FILE ID:%d\n",cur->file_id);
-			printf("FILE TITLE: %s\n",cur->file_title);
-			printf("FILE SERVER NAME: %s\n", cur->file_orign_name);
-			printf("FILE ABSTRACT:%s\n",cur->file_abstract);
-			printf("FILE UP TIME: %s\n", cur->file_up_time);
-			printf("FILE URL:%s\n",cur->file_url);
+			//print_file_element(cur);
 
 			pre->next = cur;
 			pre = cur;
@@ -429,18 +417,7 @@ bool parse_course_assignment(CURL *curl_web_handler,char *path, p_assignment_ele
 			get_assignment_score(curl_web_handler,buf,cur);
 
 
-		printf("ASSIGNMENT NAME: %s\n",cur->assignment_name);
-		printf("ASSIGNMENT TIME: %s\n",cur->assignment_time);
-		printf("ASSIGNMENT DEADLINE: %s\n", cur->assignment_deadline);
-		printf("ASSIGNMENT STATUS: %s\n", cur->assignment_status);
-		printf("ASSIGNMENT SCORE: %s\n", cur->assignment_score);
-		printf("ASSIGNMENT COMMENT: %s\n", cur->assignment_comment);
-		printf("ASSIGNMENT DESCRIPTION: %s\n", cur->assignment_description);
-		printf("ASSIGNMENT ATTACHMENT URL: %s\n",cur->assignment_attachment_url);
-		printf("ASSIGNMENT ATTACHMENT NAME: %s\n",cur->assignment_attachment_name);
-		printf("HAND_IN DESCRIPTION: %s\n",cur->my_handin_description);
-		printf("HAND_IN ATTACHMENT URL :%s\n", cur->my_handin_attachment_url);
-		printf("HAND_IN ATTACHMENT NAME: %s\n",cur->my_handin_attachment_name);
+		//print_assignment_element(cur);
 
 		// save it
 		if(cur->assignment_attachment_url)

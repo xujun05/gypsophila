@@ -9,7 +9,7 @@ bool get_course_list(CURL *curl_web_handler, course_type type)
 	memset(buf, 0, BUFFER_MAX_SIZE);
 
 	sprintf(buf,"%s/MultiLanguage/lesson/student/MyCourse.jsp?typepage=%d",tsinghua_prefix,type);
-	printf("URL:%s",buf);
+	//printf("URL:%s",buf);
 
 	extern cache_memory cache;
 
@@ -79,7 +79,7 @@ bool parse_course_list_page(cache_memory *cache, course_type type)
 		// COPY COURSE TYPE
 		q->type = type;
 
-		printf("COURSE ID:%d\nCOURSE_NAME:%s\nCOURSE_TERM:%s\nCOURSE_TYPE:%d\n", q->course_id, q->course_name, q->course_term, q->type);
+		//printf("COURSE ID:%d\nCOURSE_NAME:%s\nCOURSE_TERM:%s\nCOURSE_TYPE:%d\n", q->course_id, q->course_name, q->course_term, q->type);
 
 		// init the list
 		pre->next = q;

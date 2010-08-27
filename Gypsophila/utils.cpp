@@ -349,7 +349,7 @@ bool download_file(CURL * curl_web_handler, char *url,char *save_name)
 	return_code = curl_easy_getinfo(curl_web_handler, CURLINFO_RESPONSE_CODE , &ret_code);
 	if(CURLE_OK == return_code && ret_code == FILE_EXISTS)
 	{
-		printf("File download OK!\n");
+		//printf("File download OK!\n");
 		if(outs.filename)
 			free(outs.filename);
 		if(outs.stream)

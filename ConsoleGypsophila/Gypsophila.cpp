@@ -5,6 +5,7 @@ int main(int argc, char *argv[])
 	char username[32];
 	char passwd[32];
 	printf("WebCourse@Tsinghua(Console Edition)\n");
+	printf("Default path for saving course is here: .\\Course\n\n\n");
 	CURLcode return_code;
 	return_code = curl_global_init(CURL_GLOBAL_ALL);
 
@@ -26,28 +27,35 @@ int main(int argc, char *argv[])
 
 	printf("Enter your username:");
 	scanf("%s",username);
-	getPasswd("Please enter your password:", passwd, 32);
-	printf("Default path for saving file is .\\Course:");
-	scanf("%s", path);
-	if(path[0] == NULL)
-		strcpy(path, "Course");
+	getPasswd("Enter your password:", passwd, 32);
+
+
+	strcpy(path, "Course");
 
 
 
 	if(!login_learn_tsinghua(curl_web_handler, username,passwd))
 	{
-		printf("Auth Failed.\n");
+		printf("Auth Failed.\n\n\n");
 		return -1;
 	}
-	printf("Login OK\n");
+	printf("Server response: login is OK!\n\n\n");
 
 
 	init_cache();
 
-	mirror_course(curl_web_handler, path);
-	//mirror_course_frome_course_id(start_id, path);
+	int type = 2;
+	printf("What type course you want to save?(numbers only, such as 1) \n\
+1. This semester courses\n\
+2. Next semester courses\n\
+3. Previous courses(ecommended!!!)\n\
+Please enter your choice(1-3):");
+	scanf("%d", &type);
+	type--;
 
-	printf("Print OK\n");
+	mirror_course(curl_web_handler, path, type);
+
+	printf("Mirror process is over, press any number to exit!\n");
 
 	clean_cache();
 

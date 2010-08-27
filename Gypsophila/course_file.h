@@ -25,7 +25,7 @@ p_file_element init_file_list(p_file_element head);
 bool  init_file_element (p_file_element p);
 
 // insert operation
-//bool insert_element(p_file_element pre, p_file_element node);
+void print_file_element(p_file_element p);
 
 // destroy all
 bool destroy_all_file_element(p_file_element head);

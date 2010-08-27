@@ -44,7 +44,7 @@ void mirror_course_notice(CURL *curl_web_handler, char *prefix, int course_id);
 void mirror_course_file(CURL *curl_web_handler, char *prefix, int course_id);
 void mirror_course_assignment(CURL *curl_web_handler, char *prefix, int course_id);
 void mirror_course_discussion(CURL *curl_web_handler, char *prefix, int course_id);
-void mirror_course(CURL *curl_web_handler, char *prefix);
+void mirror_course(CURL *curl_web_handler, char *prefix, int type);
 void mirror_course_frome_course_id(CURL *curl_web_handler, int course_id, char *prefix);
 
 

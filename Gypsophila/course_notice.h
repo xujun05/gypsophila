@@ -26,6 +26,9 @@ bool insert_element(p_notice_element pre, p_notice_element node);
 // destroy all
 bool destroy_all_notice_element(p_notice_element head);
 
+// print
+void print_notice_element(p_notice_element p);
+
 // write it to file
 void write_all_notice_to_xmlfile(char *filename, p_notice_element head);
 #endif

@@ -57,6 +57,17 @@ bool destroy_all_notice_element(p_notice_element head)
 	return TRUE;
 }
 
+// Print
+void print_notice_element(p_notice_element p)
+{
+	printf("ID:%d\n",p->notice_id);
+	printf("PUBLISHER:%s\n",p->notice_publisher);
+	printf("HIGHLIGHT:%d\n",p->is_highlight);
+	printf("TIME:%s\n",p->notice_time);
+	printf("TITLE:%s\n",p->notice_title);
+	printf("CONTENT:%s\n",p->notice_body);
+}
+
 // write it to file
 void write_all_notice_to_xmlfile(char *filename, p_notice_element head)
 {

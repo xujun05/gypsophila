@@ -46,12 +46,21 @@ bool  init_assignment_element (p_assignment_element p)
 }
 // insert operation
 // discard!!!
-/*bool insert_element(p_assignment_element pre, p_assignment_element node)
+void print_assignment_element(p_assignment_element cur)
 {
-pre->next = node;
-node->next = NULL;
-return TRUE;
-}*/
+	printf("ASSIGNMENT NAME: %s\n",cur->assignment_name);
+	printf("ASSIGNMENT TIME: %s\n",cur->assignment_time);
+	printf("ASSIGNMENT DEADLINE: %s\n", cur->assignment_deadline);
+	printf("ASSIGNMENT STATUS: %s\n", cur->assignment_status);
+	printf("ASSIGNMENT SCORE: %s\n", cur->assignment_score);
+	printf("ASSIGNMENT COMMENT: %s\n", cur->assignment_comment);
+	printf("ASSIGNMENT DESCRIPTION: %s\n", cur->assignment_description);
+	printf("ASSIGNMENT ATTACHMENT URL: %s\n",cur->assignment_attachment_url);
+	printf("ASSIGNMENT ATTACHMENT NAME: %s\n",cur->assignment_attachment_name);
+	printf("HAND_IN DESCRIPTION: %s\n",cur->my_handin_description);
+	printf("HAND_IN ATTACHMENT URL :%s\n", cur->my_handin_attachment_url);
+	printf("HAND_IN ATTACHMENT NAME: %s\n",cur->my_handin_attachment_name);
+}
 
 
 // destroy all

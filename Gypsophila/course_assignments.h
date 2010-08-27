@@ -31,7 +31,7 @@ bool  init_assignment_element (p_assignment_element p);
 
 
 // insert operation
-//bool insert_element(p_assignment_element pre, p_assignment_element node);
+void print_assignment_element(p_assignment_element cur);
 
 // destroy all
 bool destroy_all_assignment_element(p_assignment_element head);
