@@ -3,7 +3,7 @@
 extern p_course course_head;
 
 // Get Course List.
-bool get_course_list(CURL *curl_web_handler, course_type type)
+p_course get_course_list(CURL *curl_web_handler, course_type type)
 {
 	char buf[BUFFER_MAX_SIZE];
 	memset(buf, 0, BUFFER_MAX_SIZE);
@@ -15,7 +15,8 @@ bool get_course_list(CURL *curl_web_handler, course_type type)
 
 	if(!copy_web_page_to_memory(curl_web_handler, buf, &copy_to_buffer, &type))
 		return FALSE;
-	return parse_course_list_page(&cache,type);
+	parse_course_list_page(&cache,type);
+	return course_head;
 }
 
 // Get the course list

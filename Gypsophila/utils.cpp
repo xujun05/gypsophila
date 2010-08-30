@@ -284,7 +284,7 @@ bool make_dir(char * path)
 	return TRUE;
 }
 
-bool make_dir_recusive(char *path)
+__declspec(dllexport) bool make_dir_recusive(char *path)
 {
 	char *p2path = path;
 #ifdef WIN32
@@ -716,12 +716,12 @@ int code_convert(char *from_charset, char *to_charset, char *inbuf, int inlen, c
 }
 
 
-int u2g(char *inbuf,int inlen,char *outbuf,int outlen)
+__declspec(dllexport) int u2g(char *inbuf,int inlen,char *outbuf,int outlen)
 {
 	return code_convert("utf-8","gb2312",inbuf,inlen,outbuf,outlen);
 }
 
-int g2u(char *inbuf,size_t inlen,char *outbuf,size_t outlen)
+__declspec(dllexport) int g2u(char *inbuf,size_t inlen,char *outbuf,size_t outlen)
 {
 	return code_convert("gb2312","utf-8",inbuf,inlen,outbuf,outlen);
 }

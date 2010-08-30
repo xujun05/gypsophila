@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories=".\include;"
+				AdditionalIncludeDirectories="./include;./include/iniparser"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -61,8 +61,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="curllib.lib curllib_static.lib  Gypsophila.lib"
-				LinkIncremental="2"
+				AdditionalDependencies="curllib.lib curllib_static.lib Gypsophila.lib iniparser.lib"
+				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories=".\include;\include\iconv"
+				AdditionalIncludeDirectories="./include;./include/iniparser"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -136,7 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="curllib_static.lib libiconv.lib libxml2.lib Gypsophila.lib"
+				AdditionalDependencies="curllib.lib curllib_static.lib  Gypsophila.lib iniparser.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\lib"
 				GenerateDebugInformation="true"
@@ -186,10 +186,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\include\gypsophila.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="资源文件"

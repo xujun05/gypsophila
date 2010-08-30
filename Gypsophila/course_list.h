@@ -8,9 +8,9 @@
 #include "extern.h"
 #include "utils.h"
 
-__declspec(dllexport) extern p_course course_head;
+extern p_course course_head;
 
-bool get_course_list(CURL *curl_web_handler, course_type type);
+__declspec(dllexport) p_course get_course_list(CURL *curl_web_handler, course_type type);
 
 
 // Get the course list

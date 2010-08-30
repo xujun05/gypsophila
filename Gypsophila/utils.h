@@ -44,9 +44,7 @@ typedef struct _OutStruct{
 	FILE *stream;
 } OutStruct;
 
-/*
-Boolean Type
-*/
+
 __declspec(dllexport) typedef enum _course_type
 {
 	CUR_COURSE,NEXT_COURSE,PRE_COURSE
@@ -106,7 +104,7 @@ bool copy_web_page_to_memory(CURL * curl_web_handler, char *url,void *parse_func
 Make Directory on 3 Platforms: Mac Linux Windows
 */
 bool make_dir(char * path);
-bool make_dir_recusive(char *path);
+__declspec(dllexport) bool make_dir_recusive(char *path);
 
 /*
 * download file into save location.
@@ -157,10 +155,10 @@ bool destroy_all_entity_memory(p_list_entity head);
 int   convert(const char *from, const char *to,char *src, int srclen, char* save, int savelen) ;
 int code_convert(char *from_charset,char *to_charset,char *inbuf,int inlen,char *outbuf,int outlen);
 
-int u2g(char *inbuf,int inlen,char *outbuf,int outlen);
+__declspec(dllexport) int u2g(char *inbuf,int inlen,char *outbuf,int outlen);
 
 
-int g2u(char *inbuf,size_t inlen,char *outbuf,size_t outlen);
+__declspec(dllexport) int g2u(char *inbuf,size_t inlen,char *outbuf,size_t outlen);
 
 // Remove HTML tags and convert html label
 char *remove_and_convert_html(char *buf);
