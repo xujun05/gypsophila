@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Gypsophila", "Gypsophila\Gypsophila.vcproj", "{BF7E2B6C-F57C-4150-9638-7D46F809A175}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConsoleGypsophila", "ConsoleGypsophila\ConsoleGypsophila.vcproj", "{1A771FDC-8B56-4A21-99E4-F9AAE0C7BB15}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF7E2B6C-F57C-4150-9638-7D46F809A175}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BF7E2B6C-F57C-4150-9638-7D46F809A175}.Debug|Win32.Build.0 = Debug|Win32
+		{BF7E2B6C-F57C-4150-9638-7D46F809A175}.Release|Win32.ActiveCfg = Release|Win32
+		{BF7E2B6C-F57C-4150-9638-7D46F809A175}.Release|Win32.Build.0 = Release|Win32
+		{1A771FDC-8B56-4A21-99E4-F9AAE0C7BB15}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1A771FDC-8B56-4A21-99E4-F9AAE0C7BB15}.Debug|Win32.Build.0 = Debug|Win32
+		{1A771FDC-8B56-4A21-99E4-F9AAE0C7BB15}.Release|Win32.ActiveCfg = Release|Win32
+		{1A771FDC-8B56-4A21-99E4-F9AAE0C7BB15}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,30 @@
+2010-08-30 20:20
+1. can ignore courses using ini file.
+
+2010-08-26 20:10
+1. Update Visual Studio 2008 path(include path and library path)
+2. Password input problem: now password will echo "*"
+
+todo:
+1. ini files reading
+2. multithread downloading
+3. WINDOWS's UI
+
+2010-08-25 23:13 Fixed bugs
+1. msdos/win32 filepath: msdosify() function solve this problem
+2. course.c:251 the pointer plus 1 can solve this problem
+3. every write_to_xml function() modified
+
+todo
+1. test
+
+2010-08-25 Changes and Todoes
+1. remove part: cache encoding convert. Using UTF-8 coding in memory, and Linux/MacOSX compatiable
+2. remove_and_convert_html: changing some code to satify libxml
+3. change gypsophila.cpp's encoding!!! or strange error
+4. download_file is OK, from curl's download code, but function fwrite() why not working?
+5. Fixed a bug: course.c 891(Mac is also need to be fixed!)
+
+6. TODO: msdos/Windows file path
+7. TODO: in course file part, more tags will lead to download the same file.??
+
