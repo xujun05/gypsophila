@@ -458,7 +458,7 @@ p_list_entity basic_parse_page(char *buf, char *prefix,const char *suffix)
 						// start copy
 						char* end_of_copy = strstr(p,suffix);
 						cur = (p_list_entity)malloc(sizeof(list_entity));
-						cur->entity = (char *)malloc((end_of_copy - p + 1) * sizeof(char));
+						cur->entity = (char *)malloc((end_of_copy - p + 1) * sizeof(char) * 6);
 						memcpy(cur->entity, p, end_of_copy - p);
 						*(cur->entity + (end_of_copy - p)) = '\0';
 						pre->next = cur;
@@ -478,7 +478,7 @@ p_list_entity basic_parse_page(char *buf, char *prefix,const char *suffix)
 					// start copy
 					char* end_of_copy = strstr(p,suffix);
 					cur = (p_list_entity)malloc(sizeof(list_entity));
-					cur->entity = (char *)malloc((end_of_copy - p + 1) * sizeof(char));
+					cur->entity = (char *)malloc((end_of_copy - p + 1) * sizeof(char) * 6);
 					memcpy(cur->entity, p, end_of_copy - p);
 					*(cur->entity + (end_of_copy - p)) = '\0';
 					pre->next = cur;
