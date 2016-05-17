@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <gypsophila.h>
-#include "iniparser.h"
+//#include "iniparser.h"
 
-char * get_course_ignore_list(char * filename)
+/*char * get_course_ignore_list(char * filename)
 {
 	dictionary	*ini ;
 	bool is_ignore;
@@ -25,13 +25,13 @@ char * get_course_ignore_list(char * filename)
 		return NULL;
 	}
 
-	/* Get ignore attributes */
+	/* Get ignore attributes 
 	list = strdup(iniparser_getstring(ini, "Course:ignore_list", NULL));
 
 
 	iniparser_freedict(ini);
 	return list ;
-}
+}*/
 
 // type means 0(CUR),1(NEXT),2(PREV)
 void mirror_course(CURL *curl_web_handler,  char *prefix, int type)
@@ -75,16 +75,36 @@ void mirror_course(CURL *curl_web_handler,  char *prefix, int type)
 	printf("%s\n\n\n", print_gbk_buff);
 
 	// ignore some courses.
-	printf("Please edit the global.ini file to ignore courses. If you have finished, press any number to continue!\n");
-	scanf("%s", buf);
+	//printf("Please edit the global.ini file to ignore courses. If you have finished, press any number to continue!\n");
+	//scanf("%s", buf);
 
-	char *ignore_list = get_course_ignore_list("global.ini");
+	char *ignore_list = NULL; //get_course_ignore_list("global.ini");
+	int ignore[1000];
+	int tmp;
+	int ignorelen = 0;
+	FILE *fin = fopen("ignore.txt", "r");
+	if (fin != NULL) {
+		while (fscanf(fin,"%d", &tmp) != EOF) {
+			ignore[ignorelen] = tmp;
+			ignorelen++;
+		}
+	fclose(fin);
+	}
+
 	if(course_list)
 		p = course_list->next;
 #endif
 	while(p)
 	{
+		for (int i = 0;i < ignorelen;i++)
+			if (p->course_id == ignore[i]) {
+				sprintf(origin_buff, "忽略课程: %s -- %s", p->course_term, p->course_name);
+				u2g(origin_buff, strlen(origin_buff), print_gbk_buff, BUFFER_MAX_SIZE);
+				printf("%s\n", print_gbk_buff);
+				goto nxt;
+			}
 		// check the course id is in the course ignore list;
+		/*
 		if(ignore_list)
 		{
 			char course_no_buf[32];
@@ -103,7 +123,7 @@ void mirror_course(CURL *curl_web_handler,  char *prefix, int type)
 					continue;
 				}
 			}
-		}
+		}*/
 
 		sprintf(buf,"%s%c%s%c%s",prefix,PATH_SPILIT_CHAR,p->course_term,PATH_SPILIT_CHAR,p->course_name);
 		make_dir_recusive(buf);
@@ -148,6 +168,10 @@ void mirror_course(CURL *curl_web_handler,  char *prefix, int type)
 		u2g(origin_buff, strlen(origin_buff), print_gbk_buff, BUFFER_MAX_SIZE);
 		printf("%s\n\n", print_gbk_buff);
 #endif
+		FILE *fout = fopen("ignore.txt","a");
+		fprintf(fout, "%d\n", p->course_id);
+		fclose(fout);
+	nxt:
 		p = p->next;
 	}
 }
@@ -200,7 +224,7 @@ int main(int argc, char *argv[])
 	printf("What type course you want to save?(numbers only, such as 1) \n\
 1. This semester courses\n\
 2. Next semester courses\n\
-3. Previous courses(ecommended!!!)\n\
+3. Previous courses(recommended!!!)\n\
 Please enter your choice(1-3):");
 	scanf("%d", &type);
 	type--;
