@@ -36,6 +36,7 @@ bool parse_course_list_page(cache_memory *cache, course_type type)
 
 	while(p)
 	{
+		if (strstr(p->entity, "coursehome") != NULL) { p = p->next; continue; }
 		q = (p_course)malloc(sizeof(course));
 		char *p_course_id = strstr(p->entity,"course_id=");
 		p_course_id += 10;
